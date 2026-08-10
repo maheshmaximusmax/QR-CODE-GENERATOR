@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Dynamic QR Code Generator</title>
 <link rel="stylesheet" href="style.css" />
-<script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.9.2/lib/qr-code-styling.js"></script>
+<script src="/vendor/qr-code-styling/qr-code-styling.js"></script>
 </head>
 <body>
   <div class="wrap">
@@ -15,7 +15,6 @@
     </header>
 
     <main class="grid">
-      <!-- LEFT: destination + design controls -->
       <section class="panel">
 
         <div class="block">
@@ -75,11 +74,13 @@
           <div class="two-col">
             <div>
               <label for="dotsColor">Dot color</label>
-              <input id="dotsColor" type="color" value="#1a1a2e" />
+              <input id="dotsColor" type="color" value="#1a1a2e" disabled />
+              <label class="checkbox-inline"><input id="useDotsColor" type="checkbox" /> Custom color</label>
             </div>
             <div>
               <label for="cornersColor">Corner color</label>
-              <input id="cornersColor" type="color" value="#1a1a2e" />
+              <input id="cornersColor" type="color" value="#1a1a2e" disabled />
+              <label class="checkbox-inline"><input id="useCornersColor" type="checkbox" /> Custom color</label>
             </div>
           </div>
 
@@ -129,7 +130,6 @@
         </div>
       </section>
 
-      <!-- RIGHT: live preview -->
       <section class="panel preview-panel">
         <h2>Live preview</h2>
         <div id="qrPreview"></div>
