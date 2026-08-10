@@ -24,6 +24,12 @@ const nanoid = customAlphabet(
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
+// Serve the QR styling library locally (no CDN dependency, works even
+// with no internet / blocked CDNs once npm install has run once).
+app.use(
+  "/vendor/qr-code-styling",
+  express.static(path.join(__dirname, "node_modules", "qr-code-styling", "lib"))
+);
 
 function isValidUrl(str) {
   try {
