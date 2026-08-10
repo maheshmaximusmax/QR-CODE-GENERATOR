@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dynamic QR Code Generator</title>
+<link rel="stylesheet" href="style.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qr-code-styling/1.6.0-rc.1/qr-code-styling.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Dynamic QR Code Generator</h1>
+      <p class="sub">The printed QR code never changes — update where it points, anytime.</p>
+    </header>
+
+    <main class="grid">
+      <!-- LEFT: destination + design controls -->
+      <section class="panel">
+
+        <div class="block">
+          <h2>1. Destination</h2>
+          <label for="targetUrl">URL this QR code should open</label>
+          <input id="targetUrl" type="url" placeholder="https://example.com" />
+          <div class="row">
+            <button id="createBtn" class="primary">Create dynamic QR code</button>
+            <button id="updateBtn" class="secondary" disabled>Update destination</button>
+          </div>
+          <p id="linkInfo" class="hint"></p>
+        </div>
+
+        <div class="block">
+          <h2>2. Design</h2>
+
+          <label for="logoInput">Logo (optional)</label>
+          <input id="logoInput" type="file" accept="image/*" />
+          <button id="removeLogoBtn" class="tiny" type="button">Remove logo</button>
+
+          <div class="two-col">
+            <div>
+              <label for="dotsType">Dot style</label>
+              <select id="dotsType">
+                <option value="square">Square</option>
+                <option value="dots">Dots</option>
+                <option value="rounded" selected>Rounded</option>
+                <option value="classy">Classy</option>
+                <option value="classy-rounded">Classy rounded</option>
+                <option value="extra-rounded">Extra rounded</option>
+              </select>
+            </div>
+            <div>
+              <label for="cornerSquareType">Corner square style</label>
+              <select id="cornerSquareType">
+                <option value="square">Square</option>
+                <option value="dot">Dot / round</option>
+                <option value="extra-rounded" selected>Rounded</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="two-col">
+            <div>
+              <label for="cornerDotType">Corner dot style</label>
+              <select id="cornerDotType">
+                <option value="square">Square</option>
+                <option value="dot" selected>Round</option>
+              </select>
+            </div>
+            <div>
+              <label for="cornerRadius">Corner roundness (extra)</label>
+              <input id="cornerRadius" type="range" min="0" max="1" step="0.05" value="0.4" />
+            </div>
+          </div>
+
+          <div class="two-col">
+            <div>
+              <label for="dotsColor">Dot color</label>
+              <input id="dotsColor" type="color" value="#1a1a2e" />
+            </div>
+            <div>
+              <label for="cornersColor">Corner color</label>
+              <input id="cornersColor" type="color" value="#1a1a2e" />
+            </div>
+          </div>
+
+          <div class="two-col">
+            <div>
+              <label for="bgColor">Background color</label>
+              <input id="bgColor" type="color" value="#ffffff" />
+            </div>
+            <div>
+              <label for="transparentBg">Transparent background</label>
+              <input id="transparentBg" type="checkbox" />
+            </div>
+          </div>
+
+          <label for="gradient">Use gradient on dots</label>
+          <input id="gradient" type="checkbox" />
+          <div class="two-col" id="gradientColors" style="display:none">
+            <div>
+              <label for="gradColor1">Gradient start</label>
+              <input id="gradColor1" type="color" value="#6a11cb" />
+            </div>
+            <div>
+              <label for="gradColor2">Gradient end</label>
+              <input id="gradColor2" type="color" value="#2575fc" />
+            </div>
+          </div>
+        </div>
+
+        <div class="block">
+          <h2>3. Export</h2>
+          <div class="two-col">
+            <div>
+              <label for="format">File format</label>
+              <select id="format">
+                <option value="png" selected>PNG</option>
+                <option value="jpeg">JPEG</option>
+                <option value="webp">WebP</option>
+                <option value="svg">SVG (vector)</option>
+              </select>
+            </div>
+            <div>
+              <label for="size">Size (px)</label>
+              <input id="size" type="number" min="128" max="2000" step="8" value="400" />
+            </div>
+          </div>
+          <button id="downloadBtn" class="primary full">Download QR code</button>
+        </div>
+      </section>
+
+      <!-- RIGHT: live preview -->
+      <section class="panel preview-panel">
+        <h2>Live preview</h2>
+        <div id="qrPreview"></div>
+        <p class="hint">Design changes update instantly. The QR still points to the same short link, so it never needs reprinting — even after you change the destination URL.</p>
+      </section>
+    </main>
+
+    <footer>
+      <p>Self-hosted dynamic QR generator · <a href="https://github.com/" target="_blank" rel="noopener">source on GitHub</a></p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
