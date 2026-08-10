@@ -1,0 +1,16 @@
+{
+  "name": "dynamic-qr-generator",
+  "version": "1.0.0",
+  "description": "Dynamic QR code generator - the QR image never changes, but you can update its destination URL anytime. Includes full design customization (logo, dot shapes, corner styles, colors, export formats).",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "nanoid": "^3.3.7"
+  }
+}
