@@ -1,15 +1,4 @@
 // app.js
-// Two independent things happen on this page:
-//
-// 1. Talking to the backend (/api/links) to create or update the
-//    dynamic short link. The QR image always encodes the SHORT link
-//    (e.g. /r/abc123), never the real destination — so updating the
-//    destination here never changes the QR you already printed.
-//
-// 2. Rendering/styling the QR image itself with qr-code-styling,
-//    entirely in the browser. Every design control just re-renders
-//    the same short link with different visuals.
-
 const state = {
   code: null,
   ownerToken: null,
@@ -29,7 +18,9 @@ const els = {
   cornerDotType: document.getElementById("cornerDotType"),
   cornerRadius: document.getElementById("cornerRadius"),
   dotsColor: document.getElementById("dotsColor"),
+  useDotsColor: document.getElementById("useDotsColor"),
   cornersColor: document.getElementById("cornersColor"),
+  useCornersColor: document.getElementById("useCornersColor"),
   bgColor: document.getElementById("bgColor"),
   transparentBg: document.getElementById("transparentBg"),
   gradient: document.getElementById("gradient"),
@@ -48,9 +39,12 @@ function buildQrData() {
   const dataUrl = state.redirectUrl || "https://example.com/r/preview";
 
   const useGradient = els.gradient.checked;
+  const dotColorValue = els.useDotsColor.checked ? els.dotsColor.value : "#000000";
+  const cornerColorValue = els.useCornersColor.checked ? els.cornersColor.value : "#000000";
+
   const dotsOptions = {
     type: els.dotsType.value,
-    color: els.dotsColor.value
+    color: dotColorValue
   };
   if (useGradient) {
     dotsOptions.gradient = {
@@ -76,11 +70,11 @@ function buildQrData() {
     dotsOptions,
     cornersSquareOptions: {
       type: els.cornerSquareType.value,
-      color: els.cornersColor.value
+      color: cornerColorValue
     },
     cornersDotOptions: {
       type: els.cornerDotType.value,
-      color: els.cornersColor.value
+      color: cornerColorValue
     },
     backgroundOptions: {
       color: els.transparentBg.checked ? "rgba(0,0,0,0)" : els.bgColor.value
@@ -103,8 +97,6 @@ function setLinkInfo(msg) {
   els.linkInfo.textContent = msg;
 }
 
-// ---- Create / update dynamic link ----
-
 els.createBtn.addEventListener("click", async () => {
   const url = els.targetUrl.value.trim();
   if (!url) return setLinkInfo("Enter a URL first.");
@@ -122,7 +114,6 @@ els.createBtn.addEventListener("click", async () => {
     state.ownerToken = data.ownerToken;
     state.redirectUrl = data.redirectUrl;
 
-    // Remember this link locally so the owner can come back and edit it.
     const saved = JSON.parse(localStorage.getItem("dynamicQrLinks") || "{}");
     saved[data.code] = { ownerToken: data.ownerToken, targetUrl: data.targetUrl };
     localStorage.setItem("dynamicQrLinks", JSON.stringify(saved));
@@ -159,8 +150,6 @@ els.updateBtn.addEventListener("click", async () => {
   }
 });
 
-// On load, restore the last created link (if any) so refreshing the page
-// doesn't lose your editable QR.
 window.addEventListener("DOMContentLoaded", () => {
   const lastCode = localStorage.getItem("dynamicQrLastCode");
   const saved = JSON.parse(localStorage.getItem("dynamicQrLinks") || "{}");
@@ -174,8 +163,6 @@ window.addEventListener("DOMContentLoaded", () => {
   }
   renderQr();
 });
-
-// ---- Logo upload ----
 
 els.logoInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
@@ -194,8 +181,6 @@ els.removeLogoBtn.addEventListener("click", () => {
   renderQr();
 });
 
-// ---- Design controls: re-render live ----
-
 [
   els.dotsType,
   els.cornerSquareType,
@@ -211,12 +196,20 @@ els.removeLogoBtn.addEventListener("click", () => {
   els.size
 ].forEach((el) => el.addEventListener("input", renderQr));
 
+els.useDotsColor.addEventListener("change", () => {
+  els.dotsColor.disabled = !els.useDotsColor.checked;
+  renderQr();
+});
+
+els.useCornersColor.addEventListener("change", () => {
+  els.cornersColor.disabled = !els.useCornersColor.checked;
+  renderQr();
+});
+
 els.gradient.addEventListener("change", () => {
   els.gradientColors.style.display = els.gradient.checked ? "grid" : "none";
   renderQr();
 });
-
-// ---- Download ----
 
 els.downloadBtn.addEventListener("click", () => {
   if (!qrCode) return;
